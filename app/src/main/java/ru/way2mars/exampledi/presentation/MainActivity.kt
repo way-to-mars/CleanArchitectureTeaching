@@ -9,7 +9,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import ru.way2mars.exampledi.R
 import ru.way2mars.exampledi.data.repository.DataRepositoryImplementation
-import ru.way2mars.exampledi.domain.models.SaveDataObject
+import ru.way2mars.exampledi.data.storage.DataStorage
+import ru.way2mars.exampledi.data.storage.sharedprefs.SharedPrefDataStorage
 import ru.way2mars.exampledi.domain.repository.DataRepository
 import ru.way2mars.exampledi.domain.usecase.GetDataUseCase
 import ru.way2mars.exampledi.domain.usecase.SaveDataUseCase
@@ -17,7 +18,12 @@ import ru.way2mars.exampledi.domain.usecase.SaveDataUseCase
 
 class MainActivity : AppCompatActivity() {
 
-    private val dataRepository by lazy { DataRepositoryImplementation(context = applicationContext) }
+    private val sharedPrefDataStorage: DataStorage by lazy {
+        SharedPrefDataStorage(context = applicationContext)
+    }
+    private val dataRepository: DataRepository by lazy {
+        DataRepositoryImplementation(dataStorage = sharedPrefDataStorage)
+    }
     private val getDataUseCase by lazy { GetDataUseCase(dataRepository) }
     private val saveDataUseCase by lazy { SaveDataUseCase(dataRepository) }
 
@@ -40,7 +46,10 @@ class MainActivity : AppCompatActivity() {
         sendButton.setOnClickListener {
             println("Send Button clicked")
             val result = saveDataUseCase.execute(
-                SaveDataObject(name = dataEditView.text.toString())
+                ru.way2mars.exampledi.domain.models.SaveDataObject(
+                    title = "Any title",
+                    message = dataEditView.text.toString(),
+                )
             )
             dataTextView.text = "Save result: ${if (result) "Ok" else "Failed"}"
         }
@@ -48,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         receiveButton.setOnClickListener {
             println("Receive Button clicked")
             val dataObject = getDataUseCase.execute()
-            dataTextView.text = dataObject.name
+            dataTextView.text = dataObject.message
         }
     }
 }

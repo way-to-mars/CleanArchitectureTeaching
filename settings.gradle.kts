@@ -21,3 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "ExampleDI"
 include(":app")
+include(":data")
+include(":domain")
+include(":basicutils")
