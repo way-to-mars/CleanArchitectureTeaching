@@ -10,15 +10,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.way2mars.exampledi.R
 import ru.way2mars.exampledi.basicutils.con
 
 
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this, MainViewModelFactory(this))[MainViewModel::class.java]
-    }
+    private val viewModel by viewModel<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
