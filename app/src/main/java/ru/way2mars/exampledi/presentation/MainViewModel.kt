@@ -1,16 +1,38 @@
 package ru.way2mars.exampledi.presentation
 
-import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ru.way2mars.exampledi.domain.models.SaveDataObject
+import ru.way2mars.exampledi.domain.usecase.GetDataUseCase
+import ru.way2mars.exampledi.domain.usecase.SaveDataUseCase
 
-class MainViewModel : ViewModel() {
+class MainViewModel(
+    private val getDataUseCase: GetDataUseCase,
+    private val saveDataUseCase: SaveDataUseCase,
+) : ViewModel() {
 
-    init{
-        Log.e("404", "ViewModel created")
-    }
+    private val messageLiveMutable = MutableLiveData<String>()
+    val messageLive: LiveData<String>
+        get() = messageLiveMutable
 
     override fun onCleared() {
-        Log.e("404", "ViewModel cleared")
         super.onCleared()
+    }
+
+
+    fun save(text: String) {
+        val result: Boolean = saveDataUseCase.execute(
+            SaveDataObject(
+                title = "Any title",
+                message = text,
+            )
+        )
+        messageLiveMutable.value = "Save result: ${if (result) "Ok" else "Failed"}"
+    }
+
+    fun load() {
+        val dataObject = getDataUseCase.execute()
+        messageLiveMutable.value = dataObject.message
     }
 }

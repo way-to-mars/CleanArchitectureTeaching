@@ -1,31 +1,24 @@
 package ru.way2mars.exampledi.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import ru.way2mars.exampledi.R
-import ru.way2mars.exampledi.data.repository.DataRepositoryImplementation
-import ru.way2mars.exampledi.data.storage.DataStorage
-import ru.way2mars.exampledi.data.storage.sharedprefs.SharedPrefDataStorage
-import ru.way2mars.exampledi.domain.repository.DataRepository
-import ru.way2mars.exampledi.domain.usecase.GetDataUseCase
-import ru.way2mars.exampledi.domain.usecase.SaveDataUseCase
+import ru.way2mars.exampledi.basicutils.con
 
 
 class MainActivity : AppCompatActivity() {
 
-    private val sharedPrefDataStorage: DataStorage by lazy {
-        SharedPrefDataStorage(context = applicationContext)
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProvider(this, MainViewModelFactory(this))[MainViewModel::class.java]
     }
-    private val dataRepository: DataRepository by lazy {
-        DataRepositoryImplementation(dataStorage = sharedPrefDataStorage)
-    }
-    private val getDataUseCase by lazy { GetDataUseCase(dataRepository) }
-    private val saveDataUseCase by lazy { SaveDataUseCase(dataRepository) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,26 +31,27 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        Log.e("404", "MainActivity created")
+
+        viewModel.con(
+            message = viewModel.hashCode().toString(radix = 16)
+        ) { viewModel.viewModelScope.toString() }
+
         val dataTextView = findViewById<TextView>(R.id.dataTextView)
         val dataEditView = findViewById<TextView>(R.id.dataEditText)
         val sendButton = findViewById<Button>(R.id.sendButton)
         val receiveButton = findViewById<Button>(R.id.receiveButton)
 
+        viewModel.messageLive.observe(this) { dataTextView.text = it }
+
         sendButton.setOnClickListener {
             println("Send Button clicked")
-            val result = saveDataUseCase.execute(
-                ru.way2mars.exampledi.domain.models.SaveDataObject(
-                    title = "Any title",
-                    message = dataEditView.text.toString(),
-                )
-            )
-            dataTextView.text = "Save result: ${if (result) "Ok" else "Failed"}"
+            viewModel.save(dataEditView.text.toString())
         }
 
         receiveButton.setOnClickListener {
             println("Receive Button clicked")
-            val dataObject = getDataUseCase.execute()
-            dataTextView.text = dataObject.message
+            viewModel.load()
         }
     }
 }

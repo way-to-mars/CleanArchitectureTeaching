@@ -7,7 +7,7 @@ package ru.way2mars.exampledi.basicutils
  *
  * Structure: (javaClass.name) (message : optional) "a string by converter()"
  */
-inline fun <T : Any> T.con(message: String? = null, converter: (T) -> String = { it.toString() }): T {
+fun <T : Any> T.con(message: String? = null, converter: (T) -> String = { it.toString() }): T {
     val typeString = "(class=${this.javaClass.name})"
     val msgString = if (message != null) " ($message)" else ""
     println("$typeString$msgString ${converter(this)}")
