@@ -36,8 +36,6 @@ android {
     }
 }
 
-val koinVersion = "3.5.6"
-
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -56,9 +54,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-    implementation("io.insert-koin:koin-core:$koinVersion")
-    implementation("io.insert-koin:koin-android:$koinVersion")
-    testImplementation("io.insert-koin:koin-test:$koinVersion")
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    testImplementation(libs.koin.test)
 
     implementation(project(":domain"))
     implementation(project(":data"))
