@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.kapt)
+//    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.daggerHilt)
 }
 
 android {
@@ -43,22 +45,31 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.fragment.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation(libs.dagger)
-    kapt(libs.dagger.compiler)
+//    implementation(libs.dagger)
+//    kapt(libs.dagger.compiler)
     implementation(libs.javax.inject)
+
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
 
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-    implementation(libs.koin.core)
-    implementation(libs.koin.android)
-    testImplementation(libs.koin.test)
+//    implementation(libs.koin.core)
+//    implementation(libs.koin.android)
+//    testImplementation(libs.koin.test)
 
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation(project(":basicutils"))
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }

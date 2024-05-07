@@ -3,9 +3,11 @@ package ru.way2mars.exampledi.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.way2mars.exampledi.domain.models.SaveDataObject
 import ru.way2mars.exampledi.domain.usecase.GetDataUseCase
 import ru.way2mars.exampledi.domain.usecase.SaveDataUseCase
+import javax.inject.Inject
 
 /**
  * Реализация вью-модели для *MainActivity*
@@ -15,7 +17,8 @@ import ru.way2mars.exampledi.domain.usecase.SaveDataUseCase
  * @param getDataUseCase юс-кейс для получения данных [GetDataUseCase].
  * @param saveDataUseCase юс-кейс для сохранения данных [SaveDataUseCase].
  */
-class MainViewModel(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     private val getDataUseCase: GetDataUseCase,
     private val saveDataUseCase: SaveDataUseCase,
 ) : ViewModel() {
