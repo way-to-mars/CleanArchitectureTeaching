@@ -8,6 +8,14 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+
 dependencies {
-    implementation(project(":basicutils"))
+    testImplementation(libs.junit.jupiter)
+//    testImplementation(libs.mockito.core)
+//    testImplementation(libs.mockito.kotlin)
+
+//    implementation(project(":basicutils"))
+}
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
